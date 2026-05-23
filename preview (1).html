@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>FPS Calculator Pro</title>
+
+<style>
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+
+}
+
+body{
+
+min-height:100vh;
+
+background:
+linear-gradient(
+-45deg,
+#000428,
+#004e92,
+#0f2027,
+#2c5364
+);
+
+background-size:
+400% 400%;
+
+animation:
+bg 12s ease infinite;
+
+color:white;
+
+padding:30px;
+
+}
+
+@keyframes bg{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+.container{
+
+max-width:1000px;
+
+margin:auto;
+
+background:
+rgba(
+20,
+20,
+40,
+0.8
+);
+
+backdrop-filter:
+blur(15px);
+
+padding:30px;
+
+border-radius:25px;
+
+box-shadow:
+0 0 40px
+rgba(
+0,
+255,
+255,
+0.3
+);
+
+}
+
+h1{
+
+text-align:center;
+
+font-size:45px;
+
+margin-bottom:10px;
+
+color:#42d4ff;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+margin-bottom:35px;
+
+color:#ddd;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(
+300px,
+1fr
+));
+
+gap:20px;
+
+}
+
+.card{
+
+background:
+rgba(
+255,
+255,
+255,
+0.05
+);
+
+padding:20px;
+
+border-radius:20px;
+
+}
+
+label{
+
+display:block;
+
+margin-bottom:8px;
+
+font-size:17px;
+
+}
+
+select{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:12px;
+
+background:#1e293b;
+
+color:white;
+
+font-size:15px;
+
+}
+
+button{
+
+width:100%;
+
+padding:16px;
+
+margin-top:25px;
+
+border:none;
+
+border-radius:15px;
+
+background:
+linear-gradient(
+90deg,
+cyan,
+blue
+);
+
+color:white;
+
+font-size:20px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:0.3s;
+
+}
+
+button:hover{
+
+transform:scale(1.03);
+
+}
+
+.result{
+
+margin-top:25px;
+
+padding:25px;
+
+border-radius:20px;
+
+background:
+rgba(
+0,
+255,
+255,
+0.08
+);
+
+font-size:22px;
+
+text-align:center;
+
+}
+
+.parts{
+
+margin-top:35px;
+
+display:grid;
+
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(
+180px,
+1fr
+));
+
+gap:15px;
+
+}
+
+.part{
+
+background:
+rgba(
+255,
+255,
+255,
+0.05
+);
+
+padding:20px;
+
+border-radius:15px;
+
+}
+
+.part h3{
+
+color:cyan;
+
+margin-bottom:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+🎮 FPS Calculator Pro
+</h1>
+
+<p class="subtitle">
+
+Kompyuter qismlari va taxminiy FPS hisoblash
+
+</p>
+
+<div class="grid">
+
+<div class="card">
+
+<label>CPU</label>
+
+<select id="cpu"></select>
+
+<label>GPU</label>
+
+<select id="gpu"></select>
+
+<label>RAM</label>
+
+<select id="ram">
+
+<option>8</option>
+<option>16</option>
+<option>32</option>
+<option>64</option>
+
+</select>
+
+</div>
+
+<div class="card">
+
+<label>O'yin</label>
+
+<select id="game">
+
+<option>CS2</option>
+<option>Valorant</option>
+<option>Minecraft</option>
+<option>Fortnite</option>
+<option>Cyberpunk 2077</option>
+<option>Warzone</option>
+<option>GTA 5</option>
+<option>Roblox</option>
+
+</select>
+
+<label>Grafika</label>
+
+<select id="quality">
+
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+<option>Ultra</option>
+
+</select>
+
+<label>Ekran</label>
+
+<select id="resolution">
+
+<option>1080p</option>
+<option>1440p</option>
+<option>4K</option>
+
+</select>
+
+</div>
+
+</div>
+
+<button onclick="fpsHisobla()">
+
+FPS ANIQLASH
+
+</button>
+
+<div
+class="result"
+id="natija">
+
+FPS shu yerda chiqadi
+
+</div>
+
+<div class="parts">
+
+<div class="part">
+
+<h3>CPU</h3>
+
+Kompyuter miyasi
+
+</div>
+
+<div class="part">
+
+<h3>GPU</h3>
+
+Grafika va FPS
+
+</div>
+
+<div class="part">
+
+<h3>RAM</h3>
+
+Tezkor xotira
+
+</div>
+
+<div class="part">
+
+<h3>SSD</h3>
+
+Yuklanish tezligi
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const cpus={
+
+"Celeron":30,
+
+"Pentium":40,
+
+"i3 10100":60,
+
+"i5 10400F":85,
+
+"i5 12400F":110,
+
+"i5 14600K":150,
+
+"i7 12700K":160,
+
+"i7 14700K":180,
+
+"i9 14900K":220,
+
+"Ryzen 5 5600":100,
+
+"Ryzen 7 5800X":145,
+
+"Ryzen 7 7800X3D":220,
+
+"Ryzen 9 7950X3D":240
+
+}
+
+const gpus={
+
+"GTX 1050 Ti":45,
+
+"GTX 1650":70,
+
+"RTX 2060":100,
+
+"RTX 3060":150,
+
+"RTX 4060":180,
+
+"RTX 4070":230,
+
+"RTX 4080":280,
+
+"RTX 4090":350,
+
+"RX 580":80,
+
+"RX 6600":145,
+
+"RX 7800 XT":240,
+
+"RX 7900 XTX":320
+
+}
+
+for(let x in cpus){
+
+cpu.innerHTML+=
+`<option>${x}</option>`
+
+}
+
+for(let x in gpus){
+
+gpu.innerHTML+=
+`<option>${x}</option>`
+
+}
+
+function fpsHisobla(){
+
+let fps=
+
+cpus[cpu.value]+
+gpus[gpu.value]
+
+if(ram.value=="8")
+fps-=20
+
+if(ram.value=="32")
+fps+=10
+
+if(ram.value=="64")
+fps+=20
+
+if(quality.value=="High")
+fps-=30
+
+if(quality.value=="Ultra")
+fps-=60
+
+if(resolution.value=="1440p")
+fps-=35
+
+if(resolution.value=="4K")
+fps-=80
+
+const games={
+
+"CS2":80,
+
+"Valorant":90,
+
+"Minecraft":50,
+
+"Roblox":70,
+
+"Fortnite":-10,
+
+"GTA 5":-20,
+
+"Warzone":-40,
+
+"Cyberpunk 2077":-80
+
+}
+
+fps+=
+games[
+game.value
+]
+
+fps=
+Math.max(
+25,
+fps
+)
+
+natija.innerHTML=`
+
+🔥 ${fps} FPS
+
+<br><br>
+
+CPU:
+${cpu.value}
+
+<br>
+
+GPU:
+${gpu.value}
+
+<br>
+
+${resolution.value}
+
+${quality.value}
+
+`
+
+}
+
+</script>
+
+</body>
+
+</html>
